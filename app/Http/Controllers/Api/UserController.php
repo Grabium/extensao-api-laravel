@@ -11,14 +11,21 @@ class UserController extends Controller
 {
 
     private User $user;
+    private bool $autoriz;
 
-    public function  __construct(User $user) {
+    public function  __construct(User $user, Request $request) {
         $this->user = $user;
+        $this->autoriz = (new AutorizacaoController)->autoriz($request);
     }
 
     public function index()
     {
         //$users = $this->user->all();
+        if(!$this->autoriz){
+            $resp = ['msg'=> 'Não autorizado', 'data'=> null];
+            return response()->json($resp);
+        }
+
         $users = User::all();
         $resp = ['msg'=> count($users).' usuário(s) encontrado(s)', 'data'=>$users];
         return response()->json($resp);
@@ -27,6 +34,10 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        if(!$this->autoriz){
+            $resp = ['msg'=> 'Não autorizado', 'data'=> null];
+            return response()->json($resp);
+        }
 
         $data = $request->all();
         //$user = $this->user->create($data);
@@ -37,6 +48,11 @@ class UserController extends Controller
 
     public function show(string $id)
     {
+        if(!$this->autoriz){
+            $resp = ['msg'=> 'Não autorizado', 'data'=> null];
+            return response()->json($resp);
+        }
+
         //$user = $this->user->findOrFail($id);
         $user = User::findOrFail($id);
         $resp = ['msg'=> 'Usuario encontrado', 'data'=>$user];
@@ -46,11 +62,15 @@ class UserController extends Controller
 
     public function update(Request $request, string $id)
     {
+        if(!$this->autoriz){
+            $resp = ['msg'=> 'Não autorizado', 'data'=> null];
+            return response()->json($resp);
+        }
+
         $data = $request->all();
         $user = User::findOrFail($id);
 
         $user->name  = $data[ 'name'];
-        $user->email = $data['email'];
         $user->about = $data['about'];        
 
         $user->saveOrFail();
@@ -61,6 +81,11 @@ class UserController extends Controller
 
     public function destroy(string $id)
     {
+        if(!$this->autoriz){
+            $resp = ['msg'=> 'Não autorizado', 'data'=> null];
+            return response()->json($resp);
+        }
+        
         $user = User::findOrFail($id);
     	$user->delete();
 
