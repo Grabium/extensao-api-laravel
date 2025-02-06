@@ -7,11 +7,11 @@ use Illuminate\Http\Request;
 
 class AutorizacaoController extends Controller
 {
-    public function autoriz(Request $request){
+    public function autoriz(Request $request): bool{
         
         $token = 'asdfad78941555fASDFTGHYjusdfgTY4156123';
 
-        $authorizationHeader = $request->header('Authorization');
+        $authorizationHeader = $request->header( 'Authorization');
         
         if($authorizationHeader != $token){
             return false;
