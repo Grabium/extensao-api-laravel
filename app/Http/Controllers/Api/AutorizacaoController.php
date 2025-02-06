@@ -12,7 +12,7 @@ class AutorizacaoController extends Controller
         $token = 'asdfad78941555fASDFTGHYjusdfgTY4156123';
 
         $authorizationHeader = $request->header( 'Authorization');
-        
+
         if($authorizationHeader != $token){
             return false;
         }else{

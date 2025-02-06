@@ -12,12 +12,10 @@ class UserController extends Controller
 
     private User $user;
     private bool $autoriz;
-    private bool $valid;
 
     public function  __construct(User $user, Request $request) {
         $this->user = $user;
         $this->autoriz = (new AutorizacaoController)->autoriz($request);
-        $this->valid = (new ValidController)->valid($request);
     }
 
     public function index()
@@ -41,7 +39,9 @@ class UserController extends Controller
             return response()->json($resp);
         }
 
-        if(!$this->valid){
+        $valid = (new ValidController)->valid($request);
+
+        if(!$valid){
             $resp = ['msg'=> 'Email não validado. Use <seu-nome>@foo.com', 'data'=> null];
             return response()->json($resp);
         }
@@ -74,7 +74,9 @@ class UserController extends Controller
             return response()->json($resp);
         }
 
-        if(!$this->valid){
+        $valid = (new ValidController)->valid($request);
+
+        if(!$valid){
             $resp = ['msg'=> 'Email não validado. Use <seu-nome>@foo.com', 'data'=> null];
             return response()->json($resp);
         }
